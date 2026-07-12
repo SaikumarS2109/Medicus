@@ -1,0 +1,117 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(PATIENT)
+  phone     String?
+  specialty String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  patients     Patient[]
+  appointments Appointment[] @relation("doctor")
+  prescriptions Prescription[] @relation("doctor")
+  shifts       StaffShift[]
+
+  @@index([role])
+  @@index([email])
+}
+
+model Patient {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  dateOfBirth       DateTime?
+  gender            String?
+  bloodType         String?
+  allergies         String?
+  medicalHistory    String?
+  insurance         String?
+  emergencyContact  String?
+  profilePictureUrl String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointments  Appointment[]
+  prescriptions Prescription[]
+
+  @@index([userId])
+}
+
+model Appointment {
+  id              String   @id @default(cuid())
+  patientId       String
+  doctorId        String
+  createdBy       String
+  appointmentDate DateTime
+  duration        Int      @default(30)
+  status          String   @default("scheduled")
+  reason          String?
+  notes           String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  doctor  User   @relation("doctor", fields: [doctorId], references: [id], onDelete: Cascade)
+
+  @@index([patientId])
+  @@index([doctorId])
+  @@index([appointmentDate])
+}
+
+model Prescription {
+  id               String   @id @default(cuid())
+  patientId        String
+  doctorId         String
+  medication       String
+  dosage           String
+  frequency        String
+  startDate        DateTime
+  endDate          DateTime?
+  refillsRemaining Int      @default(3)
+  status           String   @default("active")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  patient Patient @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  doctor  User   @relation("doctor", fields: [doctorId], references: [id], onDelete: Cascade)
+
+  @@index([patientId])
+  @@index([doctorId])
+  @@index([status])
+}
+
+model StaffShift {
+  id        String   @id @default(cuid())
+  doctorId  String
+  date      DateTime
+  startTime String
+  endTime   String
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  doctor User @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+  @@index([doctorId])
+  @@index([date])
+}
+
+enum Role {
+  PATIENT
+  DOCTOR
+  ADMIN
+}
