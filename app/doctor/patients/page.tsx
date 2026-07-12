@@ -66,7 +66,7 @@ export default function DoctorPatientsPage() {
                   </p>
                 </div>
                 <a
-                  href={`/patients/${patient.id}`}
+                  href={`/doctor/patients/${patient.id}`}
                   className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                 >
                   View Full Record

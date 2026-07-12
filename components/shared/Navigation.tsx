@@ -29,9 +29,9 @@ export default function Navigation() {
 
   const doctorLinks = [
     { href: "/dashboard", label: "Dashboard" },
-    { href: "/patients", label: "Patients" },
-    { href: "/prescriptions", label: "Prescriptions" },
-    { href: "/schedule", label: "Schedule" },
+    { href: "/doctor/patients", label: "Patients" },
+    { href: "/doctor/my-prescriptions", label: "Prescriptions" },
+    { href: "/doctor/schedule", label: "Schedule" },
   ];
 
   const adminLinks = [
@@ -41,7 +41,7 @@ export default function Navigation() {
     { href: "/admin/schedule", label: "Schedule" },
   ];
 
-  let navLinks = [];
+  let navLinks: { href: string; label: string }[] = [];
   if (session.user.role === "patient") {
     navLinks = patientLinks;
   } else if (session.user.role === "doctor") {
