@@ -1,5 +1,11 @@
 # Authentication & CRUD Flow Testing Guide
 
+## Route Structure
+- **Patient Routes**: /appointments, /appointments/book, /prescriptions, /profile
+- **Doctor Routes**: /doctor/patients, /doctor/patients/[id], /doctor/my-prescriptions, /doctor/schedule
+- **Admin Routes**: /admin/users, /admin/appointments, /admin/schedule
+- **Shared**: /dashboard (role-based content), /login, /signup
+
 ## Prerequisite Setup
 1. Ensure PostgreSQL is running with the healthcare_portal database
 2. Run: `npm run dev` to start the development server
@@ -67,7 +73,7 @@
 ### Test 4: Patient Books Appointment with Doctor
 **Steps:**
 1. Login as patient (John Patient)
-2. Click "Book Appointment" in dashboard or navigate to /appointments/book
+2. Click "Book Appointment" in navigation or navigate to /appointments/book
 3. Fill in:
    - Select Doctor: "Dr. Sarah Smith"
    - Preferred Date & Time: Tomorrow, 2:00 PM
@@ -133,16 +139,16 @@
    - /dashboard ✓ (allowed)
    - /appointments ✓ (allowed)
    - /profile ✓ (allowed)
-   - /patients (should redirect to /dashboard)
+   - /doctor/patients (should redirect to /dashboard)
    - /admin/users (should redirect to /dashboard)
 
 **Steps (Doctor):**
 1. Login as doctor
 2. Try to access:
    - /dashboard ✓ (allowed)
-   - /patients ✓ (allowed)
-   - /prescriptions ✓ (allowed)
-   - /schedule ✓ (allowed)
+   - /doctor/patients ✓ (allowed)
+   - /doctor/my-prescriptions ✓ (allowed)
+   - /doctor/schedule ✓ (allowed)
    - /admin/users (should redirect to /dashboard)
    - /appointments/book (should redirect to /dashboard)
 
