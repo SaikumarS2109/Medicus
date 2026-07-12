@@ -97,6 +97,7 @@ export async function PATCH(
       medicalHistory,
       insurance,
       emergencyContact,
+      profilePictureUrl,
     } = await req.json();
 
     const updated = await db.patient.update({
@@ -109,6 +110,7 @@ export async function PATCH(
         medicalHistory,
         insurance,
         emergencyContact,
+        profilePictureUrl,
       },
       include: {
         user: true,

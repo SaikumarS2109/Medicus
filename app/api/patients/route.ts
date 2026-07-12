@@ -3,13 +3,19 @@ import { requireRole } from "@/app/api/utils/roleCheck";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-  const { error, session } = await requireRole("doctor", "admin");
+  const { error, session } = await requireRole("patient", "doctor", "admin");
   if (error) return error;
 
   try {
     let patients;
 
-    if (session!.user.role === "doctor") {
+    if (session!.user.role === "patient") {
+      // Patient sees only their own data
+      patients = await db.patient.findMany({
+        where: { userId: session!.user.id },
+        include: { user: true },
+      });
+    } else if (session!.user.role === "doctor") {
       // Doctor sees patients they have appointments with
       const appointments = await db.appointment.findMany({
         where: { doctorId: session!.user.id },

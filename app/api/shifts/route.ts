@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  const { error, session } = await requireRole("admin");
+  const { error, session } = await requireRole("doctor", "admin");
   if (error) return error;
 
   try {
@@ -46,6 +46,11 @@ export async function POST(req: NextRequest) {
         { error: "Missing required fields" },
         { status: 400 }
       );
+    }
+
+    // Doctor can only create shifts for themselves
+    if (session!.user.role === "doctor" && doctorId !== session!.user.id) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const shift = await db.staffShift.create({
