@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { db } from "@/lib/db";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { NextAuthOptions } from "next-auth";
