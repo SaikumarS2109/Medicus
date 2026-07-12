@@ -4,14 +4,15 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const { error, session } = await requireRole("patient", "doctor", "admin");
   if (error) return error;
 
   try {
     const prescription = await db.prescription.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!prescription) {
@@ -29,7 +30,7 @@ export async function PATCH(
       if (status || (refillsRemaining && refillsRemaining > 0)) {
         // Patient requesting refill
         const updated = await db.prescription.update({
-          where: { id: params.id },
+          where: { id },
           data: {
             refillsRemaining: Math.max(0, (prescription.refillsRemaining || 0) - 1),
           },
@@ -43,7 +44,7 @@ export async function PATCH(
     } else {
       // Doctor/admin can update status and refills
       const updated = await db.prescription.update({
-        where: { id: params.id },
+        where: { id },
         data: {
           status: status || prescription.status,
           refillsRemaining:

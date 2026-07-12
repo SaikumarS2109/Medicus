@@ -1,8 +1,7 @@
-import { Appointment } from "@prisma/client";
 import { formatDate } from "@/lib/utils";
 
 interface AppointmentCardProps {
-  appointment: Appointment & { doctor?: any };
+  appointment: any;
   onCancel?: (id: string) => void;
 }
 

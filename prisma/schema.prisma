@@ -7,7 +7,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -15,7 +14,7 @@ model User {
   email     String   @unique
   password  String
   name      String
-  role      Role     @default(PATIENT)
+  role      Role     @default(patient)
   phone     String?
   specialty String?
   createdAt DateTime @default(now())
@@ -111,7 +110,7 @@ model StaffShift {
 }
 
 enum Role {
-  PATIENT
-  DOCTOR
-  ADMIN
+  patient
+  doctor
+  admin
 }

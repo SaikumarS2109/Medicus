@@ -4,14 +4,15 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const { error, session } = await requireRole("patient", "doctor", "admin");
   if (error) return error;
 
   try {
     const appointment = await db.appointment.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         patient: true,
         doctor: true,
@@ -51,14 +52,15 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const { error, session } = await requireRole("patient", "doctor", "admin");
   if (error) return error;
 
   try {
     const appointment = await db.appointment.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!appointment) {
@@ -79,7 +81,7 @@ export async function PATCH(
     const { status, notes } = await req.json();
 
     const updated = await db.appointment.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         status: status || appointment.status,
         notes: notes !== undefined ? notes : appointment.notes,
@@ -102,14 +104,15 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const { error, session } = await requireRole("patient", "doctor", "admin");
   if (error) return error;
 
   try {
     const appointment = await db.appointment.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!appointment) {
@@ -130,7 +133,7 @@ export async function DELETE(
     }
 
     await db.appointment.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: "Appointment cancelled" });

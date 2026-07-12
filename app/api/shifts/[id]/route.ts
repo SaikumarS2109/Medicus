@@ -4,8 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const { error, session } = await requireRole("admin");
   if (error) return error;
 
@@ -13,7 +14,7 @@ export async function PATCH(
     const { startTime, endTime, notes } = await req.json();
 
     const shift = await db.staffShift.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         startTime: startTime,
         endTime: endTime,
@@ -34,14 +35,15 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const { error, session } = await requireRole("admin");
   if (error) return error;
 
   try {
     await db.staffShift.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: "Shift deleted" });

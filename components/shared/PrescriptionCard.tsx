@@ -1,7 +1,5 @@
-import { Prescription } from "@prisma/client";
-
 interface PrescriptionCardProps {
-  prescription: Prescription & { doctor?: any };
+  prescription: any;
   onRefill?: (id: string) => void;
 }
 

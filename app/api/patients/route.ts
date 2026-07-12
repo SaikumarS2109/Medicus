@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
         distinct: ["patientId"],
       });
 
-      const patientIds = appointments.map((a) => a.patientId);
+      const patientIds = appointments.map((a: any) => a.patientId);
 
       patients = await db.patient.findMany({
         where: { id: { in: patientIds } },

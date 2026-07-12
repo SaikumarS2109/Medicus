@@ -4,14 +4,15 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const { error, session } = await requireRole("patient", "doctor", "admin");
   if (error) return error;
 
   try {
     const patient = await db.patient.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         user: true,
         appointments: {
@@ -63,14 +64,15 @@ export async function GET(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const { id } = await params;
   const { error, session } = await requireRole("patient", "doctor", "admin");
   if (error) return error;
 
   try {
     const patient = await db.patient.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!patient) {
@@ -98,7 +100,7 @@ export async function PATCH(
     } = await req.json();
 
     const updated = await db.patient.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : undefined,
         gender,
