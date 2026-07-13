@@ -117,7 +117,7 @@ body {
   color: #0F172A;
 }
 .card-body {
-  /* rows inside use .card-row */
+  padding: 20px;
 }
 .card-row {
   display: flex;
