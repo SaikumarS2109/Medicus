@@ -78,13 +78,88 @@ export async function PATCH(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const { status, notes } = await req.json();
+    const { status, notes, bloodPressure, heartRate, temperature, weight, oxygenSaturation, appointmentDate, doctorId } = await req.json();
+
+    const isAssignedDoctor = session!.user.role === "doctor" && appointment.doctorId === session!.user.id;
+    const isAdmin = session!.user.role === "admin";
+    const isPatient = session!.user.role === "patient";
+
+    // Patients can only reschedule their own appointments
+    if (isPatient) {
+      const patient = await db.patient.findUnique({ where: { userId: session!.user.id } });
+      if (appointment.patientId !== patient?.id) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      if (!appointmentDate) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      const hoursUntil = (new Date(appointment.appointmentDate).getTime() - Date.now()) / 3_600_000;
+      if (hoursUntil < 24) {
+        return NextResponse.json({ error: "Cannot reschedule within 24 hours of the appointment" }, { status: 400 });
+      }
+      // Overlap check for new slot
+      const newStart = new Date(appointmentDate);
+      const thirtyMin = 30 * 60 * 1000;
+      const overlapping = await db.appointment.findFirst({
+        where: {
+          doctorId: appointment.doctorId,
+          status: { not: "cancelled" },
+          id: { not: id },
+          appointmentDate: {
+            gt: new Date(newStart.getTime() - thirtyMin),
+            lt: new Date(newStart.getTime() + thirtyMin),
+          },
+        },
+      });
+      if (overlapping) {
+        return NextResponse.json({ error: "That time slot is already booked. Please choose a different time." }, { status: 409 });
+      }
+      const updated = await db.appointment.update({
+        where: { id },
+        data: { appointmentDate: newStart },
+        include: { patient: true, doctor: true },
+      });
+      return NextResponse.json(updated);
+    }
+
+    if (!isAssignedDoctor && !isAdmin) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
+
+    // Admin can reassign to a different doctor
+    if (isAdmin && doctorId !== undefined && doctorId !== appointment.doctorId) {
+      const newStart = new Date(appointment.appointmentDate);
+      const thirtyMin = 30 * 60 * 1000;
+      const overlapping = await db.appointment.findFirst({
+        where: {
+          doctorId,
+          status: { not: "cancelled" },
+          id: { not: id },
+          appointmentDate: {
+            gt: new Date(newStart.getTime() - thirtyMin),
+            lt: new Date(newStart.getTime() + thirtyMin),
+          },
+        },
+      });
+      if (overlapping) {
+        return NextResponse.json(
+          { error: "That doctor already has an appointment at this time." },
+          { status: 409 }
+        );
+      }
+    }
 
     const updated = await db.appointment.update({
       where: { id },
       data: {
-        status: status || appointment.status,
-        notes: notes !== undefined ? notes : appointment.notes,
+        ...(status !== undefined && { status }),
+        ...(notes !== undefined && { notes }),
+        ...(bloodPressure !== undefined && { bloodPressure }),
+        ...(heartRate !== undefined && { heartRate }),
+        ...(temperature !== undefined && { temperature }),
+        ...(weight !== undefined && { weight }),
+        ...(oxygenSaturation !== undefined && { oxygenSaturation }),
+        ...(isAdmin && doctorId !== undefined && { doctorId }),
       },
       include: {
         patient: true,
@@ -122,19 +197,18 @@ export async function DELETE(
       );
     }
 
-    // Patients can cancel their own, doctors/admins can cancel any
     if (session!.user.role === "patient") {
-      const patient = await db.patient.findUnique({
-        where: { userId: session!.user.id },
-      });
+      const patient = await db.patient.findUnique({ where: { userId: session!.user.id } });
       if (appointment.patientId !== patient?.id) {
         return NextResponse.json({ error: "Forbidden" }, { status: 403 });
       }
+      const hoursUntil = (new Date(appointment.appointmentDate).getTime() - Date.now()) / 3_600_000;
+      if (hoursUntil < 24) {
+        return NextResponse.json({ error: "Cannot cancel within 24 hours of the appointment" }, { status: 400 });
+      }
     }
 
-    await db.appointment.delete({
-      where: { id },
-    });
+    await db.appointment.update({ where: { id }, data: { status: "cancelled" } });
 
     return NextResponse.json({ message: "Appointment cancelled" });
   } catch (error) {
