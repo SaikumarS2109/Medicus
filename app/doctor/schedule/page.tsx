@@ -4,12 +4,22 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { formatDate } from "@/lib/utils";
+import PageLoader from "@/components/shared/PageLoader";
+import MainLayout from "@/components/shared/MainLayout";
+
+// 30-minute slots from 00:00 to 23:30
+const TIME_SLOTS = Array.from({ length: 48 }, (_, i) => {
+  const h = Math.floor(i / 2).toString().padStart(2, "0");
+  const m = i % 2 === 0 ? "00" : "30";
+  return `${h}:${m}`;
+});
 
 export default function DoctorSchedulePage() {
   const { data: session, status } = useSession();
   const [shifts, setShifts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [creatingShift, setCreatingShift] = useState(false);
+  const [shiftError, setShiftError] = useState("");
   const [shiftData, setShiftData] = useState({
     date: "",
     startTime: "",
@@ -24,10 +34,10 @@ export default function DoctorSchedulePage() {
   }, [status]);
 
   useEffect(() => {
-    if (session?.user.role !== "doctor") {
+    if (status === "authenticated" && session?.user.role !== "doctor") {
       redirect("/dashboard");
     }
-  }, [session]);
+  }, [session, status]);
 
   useEffect(() => {
     const fetchShifts = async () => {
@@ -51,6 +61,7 @@ export default function DoctorSchedulePage() {
 
   const handleCreateShift = async (e: React.FormEvent) => {
     e.preventDefault();
+    setShiftError("");
     setCreatingShift(true);
 
     try {
@@ -58,7 +69,8 @@ export default function DoctorSchedulePage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          date: new Date(shiftData.date),
+          doctorId: session?.user.id,
+          date: shiftData.date,
           startTime: shiftData.startTime,
           endTime: shiftData.endTime,
           notes: shiftData.notes,
@@ -66,133 +78,95 @@ export default function DoctorSchedulePage() {
       });
 
       if (!res.ok) {
-        throw new Error("Failed to create shift");
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "Failed to create shift");
       }
 
       const newShift = await res.json();
       setShifts([...shifts, newShift]);
-      setShiftData({
-        date: "",
-        startTime: "",
-        endTime: "",
-        notes: "",
-      });
+      setShiftData({ date: "", startTime: "", endTime: "", notes: "" });
     } catch (error) {
-      console.error("Error creating shift:", error);
+      setShiftError(error instanceof Error ? error.message : "Failed to create shift");
     } finally {
       setCreatingShift(false);
     }
   };
 
-  if (status === "loading" || loading) {
-    return <div className="p-8">Loading...</div>;
-  }
+  if (status === "loading" || loading) return <PageLoader />;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
   const upcomingShifts = shifts
-    .filter((s) => new Date(s.date) >= new Date())
+    .filter((s) => {
+      const shiftDate = new Date(s.date);
+      shiftDate.setHours(0, 0, 0, 0);
+      return shiftDate >= today;
+    })
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">Your Schedule</h1>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-white rounded-lg shadow-md p-8">
-            <h2 className="text-2xl font-bold mb-6">Add Shift</h2>
-            <form onSubmit={handleCreateShift} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Date *
-                </label>
-                <input
-                  type="date"
-                  value={shiftData.date}
-                  onChange={(e) =>
-                    setShiftData({ ...shiftData, date: e.target.value })
-                  }
-                  required
-                  className="w-full px-3 py-2 border rounded-lg"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
+    <MainLayout topBarTitle="Schedule">
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+          <div className="card">
+            <div className="card-header"><span className="card-title">Add Shift</span></div>
+            <div className="card-body">
+              {shiftError && (
+                <div style={{ marginBottom: 12, padding: "10px 14px", borderRadius: 8, fontSize: 13, background: "#FEF2F2", color: "#DC2626", border: "1px solid #FECACA" }}>
+                  {shiftError}
+                </div>
+              )}
+              <form onSubmit={handleCreateShift} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Start Time *
-                  </label>
-                  <input
-                    type="time"
-                    value={shiftData.startTime}
-                    onChange={(e) =>
-                      setShiftData({ ...shiftData, startTime: e.target.value })
-                    }
-                    required
-                    className="w-full px-3 py-2 border rounded-lg"
-                  />
+                  <label className="form-label">Date *</label>
+                  <input type="date" value={shiftData.date} onChange={(e) => setShiftData({ ...shiftData, date: e.target.value })} required className="form-input" />
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                  <div>
+                    <label className="form-label">Start Time *</label>
+                    <select value={shiftData.startTime} onChange={(e) => setShiftData({ ...shiftData, startTime: e.target.value, endTime: "" })} required className="form-select">
+                      <option value="">Select start...</option>
+                      {TIME_SLOTS.map((slot) => <option key={slot} value={slot}>{slot}</option>)}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="form-label">End Time *</label>
+                    <select value={shiftData.endTime} onChange={(e) => setShiftData({ ...shiftData, endTime: e.target.value })} required disabled={!shiftData.startTime} className="form-select" style={!shiftData.startTime ? { opacity: 0.5 } : {}}>
+                      <option value="">Select end...</option>
+                      {TIME_SLOTS.filter((slot) => slot > shiftData.startTime).map((slot) => <option key={slot} value={slot}>{slot}</option>)}
+                    </select>
+                  </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium mb-1">
-                    End Time *
-                  </label>
-                  <input
-                    type="time"
-                    value={shiftData.endTime}
-                    onChange={(e) =>
-                      setShiftData({ ...shiftData, endTime: e.target.value })
-                    }
-                    required
-                    className="w-full px-3 py-2 border rounded-lg"
-                  />
+                  <label className="form-label">Notes</label>
+                  <textarea value={shiftData.notes} onChange={(e) => setShiftData({ ...shiftData, notes: e.target.value })} rows={3} className="form-textarea" />
                 </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">Notes</label>
-                <textarea
-                  value={shiftData.notes}
-                  onChange={(e) =>
-                    setShiftData({ ...shiftData, notes: e.target.value })
-                  }
-                  rows={3}
-                  className="w-full px-3 py-2 border rounded-lg"
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={creatingShift}
-                className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-              >
-                {creatingShift ? "Creating..." : "Add Shift"}
-              </button>
-            </form>
+                <button type="submit" disabled={creatingShift} className="btn-primary">
+                  {creatingShift ? "Creating..." : "Add Shift"}
+                </button>
+              </form>
+            </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-8">
-            <h2 className="text-2xl font-bold mb-6">Upcoming Shifts</h2>
-            {upcomingShifts.length > 0 ? (
-              <div className="space-y-4">
-                {upcomingShifts.map((shift) => (
-                  <div
-                    key={shift.id}
-                    className="p-4 border rounded-lg bg-gray-50"
-                  >
-                    <p className="font-semibold">
-                      {new Date(shift.date).toLocaleDateString()}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      {shift.startTime} - {shift.endTime}
-                    </p>
-                    {shift.notes && (
-                      <p className="text-sm text-gray-600 mt-2">{shift.notes}</p>
-                    )}
+          <div className="card">
+            <div className="card-header"><span className="card-title">Upcoming Shifts</span></div>
+            <div>
+              {upcomingShifts.length > 0 ? upcomingShifts.map((shift) => (
+                <div key={shift.id} style={{ padding: "12px 20px", borderBottom: "1px solid #F8FAFC" }}>
+                  <div style={{ fontSize: 13, fontWeight: 500, color: "#0F172A" }}>
+                    {new Date(shift.date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}
                   </div>
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-600">No upcoming shifts</p>
-            )}
+                  <div style={{ fontSize: 12, color: "#94A3B8", marginTop: 2 }}>
+                    {shift.startTime} – {shift.endTime}
+                  </div>
+                  {shift.notes && <div style={{ fontSize: 11, color: "#94A3B8", marginTop: 2 }}>{shift.notes}</div>}
+                </div>
+              )) : (
+                <div style={{ padding: "24px 20px", color: "#94A3B8", fontSize: 13 }}>No upcoming shifts</div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+    </MainLayout>
   );
 }

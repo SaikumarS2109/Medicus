@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import ProfileCard from "@/components/shared/ProfileCard";
+import PageLoader from "@/components/shared/PageLoader";
+import MainLayout from "@/components/shared/MainLayout";
 
 export default function DoctorPatientsPage() {
   const { data: session, status } = useSession();
@@ -17,10 +18,10 @@ export default function DoctorPatientsPage() {
   }, [status]);
 
   useEffect(() => {
-    if (session?.user.role !== "doctor") {
+    if (status === "authenticated" && session?.user.role !== "doctor" && session?.user.role !== "admin") {
       redirect("/dashboard");
     }
-  }, [session]);
+  }, [session, status]);
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -40,44 +41,35 @@ export default function DoctorPatientsPage() {
     }
   }, [session]);
 
-  if (status === "loading" || loading) {
-    return <div className="p-8">Loading...</div>;
-  }
+  if (status === "loading" || loading) return <PageLoader />;
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">Your Patients</h1>
-
+    <MainLayout topBarTitle="Patients">
         {patients.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
             {patients.map((patient) => (
-              <div key={patient.id} className="bg-white rounded-lg shadow-md p-6">
-                <ProfileCard
-                  name={patient.user?.name || "Unknown"}
-                  email={patient.user?.email}
-                />
-                <div className="mt-4 text-sm text-gray-600">
-                  <p>
-                    <strong>DOB:</strong> {patient.dateOfBirth || "Not provided"}
-                  </p>
-                  <p>
-                    <strong>Blood Type:</strong> {patient.bloodType || "Not provided"}
-                  </p>
+              <div key={patient.id} className="card">
+                <div style={{ padding: "14px 18px" }}>
+                  <div style={{ fontSize: 13.5, fontWeight: 500, color: "#0F172A" }}>{patient.user?.name || "Unknown"}</div>
+                  <div style={{ fontSize: 12, color: "#94A3B8", marginTop: 2 }}>{patient.user?.email}</div>
+                  <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 3 }}>
+                    <div style={{ fontSize: 12, color: "#475569" }}>
+                      <span style={{ color: "#94A3B8" }}>DOB: </span>{patient.dateOfBirth || "Not provided"}
+                    </div>
+                    <div style={{ fontSize: 12, color: "#475569" }}>
+                      <span style={{ color: "#94A3B8" }}>Blood Type: </span>{patient.bloodType || "Not provided"}
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 12 }}>
+                    <a href={`/doctor/patients/${patient.id}`} className="btn-primary" style={{ fontSize: 12 }}>View Full Record</a>
+                  </div>
                 </div>
-                <a
-                  href={`/doctor/patients/${patient.id}`}
-                  className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                >
-                  View Full Record
-                </a>
               </div>
             ))}
           </div>
         ) : (
-          <p className="text-gray-600 text-lg">No patients yet</p>
+          <p style={{ color: "#94A3B8", fontSize: 13 }}>No patients yet</p>
         )}
-      </div>
-    </div>
+    </MainLayout>
   );
 }

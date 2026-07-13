@@ -1,45 +1,87 @@
 import { formatDate } from "@/lib/utils";
 
+const STATUS_BADGE: Record<string, string> = {
+  scheduled: "badge badge-scheduled",
+  completed:  "badge badge-completed",
+  cancelled:  "badge badge-cancelled",
+  "no-show":  "badge badge-no-show",
+};
+
 interface AppointmentCardProps {
   appointment: any;
   onCancel?: (id: string) => void;
+  onEdit?: () => void;
+  editLabel?: string;
 }
 
 export default function AppointmentCard({
   appointment,
   onCancel,
+  onEdit,
+  editLabel = "Edit",
 }: AppointmentCardProps) {
+  const hasVitals =
+    appointment.bloodPressure || appointment.heartRate ||
+    appointment.temperature || appointment.weight || appointment.oxygenSaturation;
+
   return (
-    <div className="p-4 border rounded-lg shadow-sm">
-      <div className="flex justify-between items-start">
-        <div>
-          <h3 className="font-semibold">
-            {appointment.doctor?.name || "Dr. Unknown"}
-          </h3>
-          <p className="text-sm text-gray-600">
+    <div className="card" style={{ overflow: "visible" }}>
+      <div style={{ padding: "14px 18px", display: "flex", gap: 12, alignItems: "flex-start" }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ fontSize: 13.5, fontWeight: 500, color: "#0F172A" }}>
+            {appointment.patient?.user?.name && appointment.doctor?.name
+              ? `${appointment.patient.user.name} → Dr. ${appointment.doctor.name}`
+              : appointment.patient?.user?.name || appointment.doctor?.name || "Unknown"}
+          </div>
+          <div style={{ fontSize: 12, color: "#94A3B8", marginTop: 2 }}>
             {formatDate(appointment.appointmentDate)}
-          </p>
-          <p className="text-sm text-gray-600">
-            Reason: {appointment.reason || "General checkup"}
-          </p>
+          </div>
+          {appointment.reason && (
+            <div style={{ fontSize: 12, color: "#475569", marginTop: 4 }}>
+              Reason: {appointment.reason}
+            </div>
+          )}
           {appointment.notes && (
-            <p className="text-sm text-gray-500 mt-2">Notes: {appointment.notes}</p>
+            <div style={{ fontSize: 12, color: "#94A3B8", marginTop: 3, fontStyle: "italic" }}>
+              {appointment.notes}
+            </div>
+          )}
+          {hasVitals && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 12px", marginTop: 6 }}>
+              {appointment.bloodPressure && (
+                <span style={{ fontSize: 11, color: "#94A3B8" }}>BP: {appointment.bloodPressure}</span>
+              )}
+              {appointment.heartRate && (
+                <span style={{ fontSize: 11, color: "#94A3B8" }}>HR: {appointment.heartRate} bpm</span>
+              )}
+              {appointment.temperature && (
+                <span style={{ fontSize: 11, color: "#94A3B8" }}>Temp: {appointment.temperature}°F</span>
+              )}
+              {appointment.weight && (
+                <span style={{ fontSize: 11, color: "#94A3B8" }}>Wt: {appointment.weight} kg</span>
+              )}
+              {appointment.oxygenSaturation && (
+                <span style={{ fontSize: 11, color: "#94A3B8" }}>O₂: {appointment.oxygenSaturation}%</span>
+              )}
+            </div>
           )}
         </div>
-        <div className="text-right">
-          <span
-            className={`text-xs font-semibold px-2 py-1 rounded ${
-              appointment.status === "scheduled"
-                ? "bg-blue-100 text-blue-800"
-                : "bg-gray-100 text-gray-800"
-            }`}
-          >
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6, flexShrink: 0 }}>
+          <span className={STATUS_BADGE[appointment.status] ?? "badge"}>
             {appointment.status}
           </span>
+          {onEdit && (
+            <button onClick={onEdit} className="btn-text" style={{ fontSize: 11 }}>
+              {editLabel}
+            </button>
+          )}
           {onCancel && appointment.status === "scheduled" && (
             <button
               onClick={() => onCancel(appointment.id)}
-              className="text-xs text-red-600 hover:underline ml-2"
+              style={{
+                background: "none", border: "none", cursor: "pointer",
+                fontSize: 11, color: "#DC2626", fontFamily: "inherit", padding: 0,
+              }}
             >
               Cancel
             </button>

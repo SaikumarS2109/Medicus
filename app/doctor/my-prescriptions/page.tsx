@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import PageLoader from "@/components/shared/PageLoader";
 import PrescriptionCard from "@/components/shared/PrescriptionCard";
+import MainLayout from "@/components/shared/MainLayout";
 
 export default function DoctorPrescriptionsPage() {
   const { data: session, status } = useSession();
@@ -17,10 +19,10 @@ export default function DoctorPrescriptionsPage() {
   }, [status]);
 
   useEffect(() => {
-    if (session?.user.role !== "doctor") {
+    if (status === "authenticated" && session?.user.role !== "doctor") {
       redirect("/dashboard");
     }
-  }, [session]);
+  }, [session, status]);
 
   useEffect(() => {
     const fetchPrescriptions = async () => {
@@ -40,22 +42,17 @@ export default function DoctorPrescriptionsPage() {
     }
   }, [session]);
 
-  if (status === "loading" || loading) {
-    return <div className="p-8">Loading...</div>;
-  }
+  if (status === "loading" || loading) return <PageLoader />;
 
   const activePrescriptions = prescriptions.filter((p) => p.status === "active");
   const inactivePrescriptions = prescriptions.filter((p) => p.status !== "active");
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">Manage Prescriptions</h1>
-
+    <MainLayout topBarTitle="Prescriptions">
         {activePrescriptions.length > 0 && (
           <div className="mb-8">
-            <h2 className="text-2xl font-bold mb-4">Active Prescriptions</h2>
-            <div className="space-y-4">
+            <h2 style={{ fontSize: 13, fontWeight: 600, color: "#94A3B8", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>Active</h2>
+            <div className="space-y-3">
               {activePrescriptions.map((rx) => (
                 <PrescriptionCard key={rx.id} prescription={rx} />
               ))}
@@ -65,8 +62,8 @@ export default function DoctorPrescriptionsPage() {
 
         {inactivePrescriptions.length > 0 && (
           <div>
-            <h2 className="text-2xl font-bold mb-4">Inactive Prescriptions</h2>
-            <div className="space-y-4">
+            <h2 style={{ fontSize: 13, fontWeight: 600, color: "#94A3B8", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: 12 }}>Inactive</h2>
+            <div className="space-y-3">
               {inactivePrescriptions.map((rx) => (
                 <PrescriptionCard key={rx.id} prescription={rx} />
               ))}
@@ -75,9 +72,8 @@ export default function DoctorPrescriptionsPage() {
         )}
 
         {prescriptions.length === 0 && (
-          <p className="text-gray-600 text-lg">No prescriptions yet</p>
+          <p style={{ color: "#94A3B8", fontSize: 13 }}>No prescriptions yet</p>
         )}
-      </div>
-    </div>
+    </MainLayout>
   );
 }
