@@ -204,6 +204,7 @@ body {
   transition: box-shadow 0.15s, border-color 0.15s;
   appearance: none;
   -webkit-appearance: none;
+  box-sizing: border-box;
 }
 .form-input::placeholder,
 .form-textarea::placeholder { color: #94A3B8; }
