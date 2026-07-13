@@ -65,7 +65,7 @@ export default function LoginForm() {
         type="submit"
         disabled={loading}
         className="btn-primary"
-        style={{ width: "100%" }}
+        style={{ width: "100%", justifyContent: "center" }}
       >
         {loading ? "Logging in..." : "Log In"}
       </button>

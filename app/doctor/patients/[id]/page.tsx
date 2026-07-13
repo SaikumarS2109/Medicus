@@ -203,7 +203,7 @@ export default function PatientDetailsPage() {
               {[
                 ["Email", patient.user?.email],
                 ["DOB", patient.dateOfBirth ? new Date(patient.dateOfBirth).toLocaleDateString() : "Not provided"],
-                ["Gender", patient.gender || "Not provided"],
+                ["Gender", patient.gender ? patient.gender.charAt(0).toUpperCase() + patient.gender.slice(1) : "Not provided"],
                 ["Blood Type", patient.bloodType || "Not provided"],
                 ["Allergies", patient.allergies || "None listed"],
                 ["Medical History", patient.medicalHistory || "None listed"],

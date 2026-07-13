@@ -66,29 +66,26 @@ export default function AppointmentCard({
             </div>
           )}
         </div>
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6, flexShrink: 0 }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 8, flexShrink: 0 }}>
           <span className={STATUS_BADGE[appointment.status] ?? "badge"}>
-            {appointment.status}
+            {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
           </span>
-          {onEdit && (
-            <button onClick={onEdit} className="btn-text" style={{ fontSize: 11 }}>
-              {editLabel}
-            </button>
-          )}
-          {onCancel && appointment.status === "scheduled" && (
-            <button
-              onClick={() => onCancel(appointment.id)}
-              style={{
-                background: "none", border: "none", cursor: "pointer",
-                fontSize: 11, color: "#DC2626", fontFamily: "inherit", padding: 0,
-                transition: "color 0.15s"
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#991B1B")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "#DC2626")}
-            >
-              Cancel
-            </button>
-          )}
+          <div style={{ display: "flex", gap: 6 }}>
+            {onEdit && (
+              <button onClick={onEdit} className="btn-secondary" style={{ fontSize: 11, padding: "6px 10px" }}>
+                {editLabel}
+              </button>
+            )}
+            {onCancel && appointment.status === "scheduled" && (
+              <button
+                onClick={() => onCancel(appointment.id)}
+                className="btn-secondary"
+                style={{ fontSize: 11, padding: "6px 10px", color: "#DC2626", borderColor: "#FECACA", background: "#FEF2F2" }}
+              >
+                Cancel
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

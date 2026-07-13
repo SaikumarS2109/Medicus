@@ -154,7 +154,7 @@ export default function AdminSchedulePage() {
           {/* Create / Edit form */}
           <div className="card">
             <div className="card-header"><span className="card-title">{editingId ? "Edit Shift" : "Create Shift"}</span></div>
-            <div className="card-body">
+            <div className="card-body" style={{ padding: 20 }}>
               {shiftError && (
                 <div style={{ marginBottom: 12, padding: "10px 14px", borderRadius: 8, fontSize: 13, background: "#FEF2F2", color: "#DC2626", border: "1px solid #FECACA" }}>
                   {shiftError}

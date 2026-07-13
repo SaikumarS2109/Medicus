@@ -198,7 +198,7 @@ export default function PatientProfilePage() {
 
         <div className="card">
           <div className="card-header"><span className="card-title">Change Password</span></div>
-          <div className="card-body">
+          <div className="card-body" style={{ padding: 20 }}>
             {pwMessage && (
               <div style={{ marginBottom: 12, padding: "10px 14px", borderRadius: 8, fontSize: 13, border: "1px solid", ...(pwMessage.startsWith("success:") ? { background: "#F0FDF4", color: "#15803D", borderColor: "#BBF7D0" } : { background: "#FEF2F2", color: "#DC2626", borderColor: "#FECACA" }) }}>
                 {pwMessage.startsWith("success:") ? pwMessage.slice(8) : pwMessage}

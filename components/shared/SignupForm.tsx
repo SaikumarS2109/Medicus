@@ -109,7 +109,7 @@ export default function SignupForm() {
         type="submit"
         disabled={loading}
         className="btn-primary"
-        style={{ width: "100%" }}
+        style={{ width: "100%", justifyContent: "center" }}
       >
         {loading ? "Signing up..." : "Sign Up"}
       </button>

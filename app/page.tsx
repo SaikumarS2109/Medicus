@@ -22,11 +22,11 @@ export default function Home() {
 
   return (
     <div style={{ background: "#fff", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      <nav style={{ background: "#fff", borderBottom: "1px solid #E2E8F0", padding: "16px 32px", position: "sticky", top: 0, zIndex: 50 }}>
+      <nav style={{ background: "#fff", borderBottom: "1px solid #E2E8F0", padding: "12px 32px", position: "sticky", top: 0, zIndex: 50 }}>
         <div style={{ maxWidth: "1280px", margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <h1 style={{ fontSize: "18px", fontWeight: 600, color: "#0F172A" }}>Medicus</h1>
-          <div style={{ display: "flex", gap: 12 }}>
-            <Link href="/login" style={{ fontSize: "13px", color: "#475569", textDecoration: "none" }}>
+          <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+            <Link href="/login" style={{ fontSize: "13px", color: "#475569", textDecoration: "none", padding: "8px 16px" }}>
               Log In
             </Link>
             <Link href="/signup" className="btn-primary" style={{ fontSize: "13px" }}>
