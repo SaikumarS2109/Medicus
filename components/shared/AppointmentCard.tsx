@@ -81,7 +81,10 @@ export default function AppointmentCard({
               style={{
                 background: "none", border: "none", cursor: "pointer",
                 fontSize: 11, color: "#DC2626", fontFamily: "inherit", padding: 0,
+                transition: "color 0.15s"
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "#991B1B")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "#DC2626")}
             >
               Cancel
             </button>

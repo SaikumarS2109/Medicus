@@ -215,6 +215,7 @@ export default function PatientProfilePage() {
                 <label className="form-label">New Password</label>
                 <input type="password" required minLength={8} value={pwData.newPassword}
                   onChange={(e) => setPwData({ ...pwData, newPassword: e.target.value })}
+                  placeholder="Minimum 8 characters"
                   className="form-input" />
               </div>
               <div>

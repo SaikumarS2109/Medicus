@@ -158,8 +158,8 @@ export default function AdminAppointmentsPage() {
                 )}
 
                 {reassigningId === apt.id && (
-                  <div style={{ marginTop: 4, padding: 16, background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 8, display: "flex", flexDirection: "column", gap: 10 }}>
-                    <p style={{ fontSize: 13, fontWeight: 500, color: "#1D4ED8" }}>Reassign to a Different Doctor</p>
+                  <div style={{ marginTop: 8, padding: 14, background: "#F8FAFC", border: "1px solid #E2E8F0", borderRadius: 8, display: "flex", flexDirection: "column", gap: 10 }}>
+                    <p style={{ fontSize: 13, fontWeight: 600, color: "#0F172A" }}>Reassign to a Different Doctor</p>
                     {reassignError && <p style={{ fontSize: 12, color: "#DC2626" }}>{reassignError}</p>}
                     <div>
                       <label className="form-label">Doctor</label>
