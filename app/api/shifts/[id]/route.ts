@@ -13,13 +13,35 @@ export async function PATCH(
   try {
     const { startTime, endTime, notes } = await req.json();
 
+    // Fetch the existing shift to get doctorId and date for overlap check
+    const existing = await db.staffShift.findUnique({ where: { id } });
+    if (!existing) {
+      return NextResponse.json({ error: "Shift not found" }, { status: 404 });
+    }
+
+    const dayStart = new Date(existing.date);
+    dayStart.setUTCHours(0, 0, 0, 0);
+    const dayEnd = new Date(dayStart);
+    dayEnd.setUTCDate(dayEnd.getUTCDate() + 1);
+
+    const siblings = await db.staffShift.findMany({
+      where: { doctorId: existing.doctorId, date: { gte: dayStart, lt: dayEnd }, id: { not: id } },
+    });
+
+    const overlapping = siblings.find(
+      (s) => startTime < s.endTime && endTime > s.startTime
+    );
+
+    if (overlapping) {
+      return NextResponse.json(
+        { error: `Overlaps with an existing shift (${overlapping.startTime}–${overlapping.endTime}).` },
+        { status: 409 }
+      );
+    }
+
     const shift = await db.staffShift.update({
       where: { id },
-      data: {
-        startTime: startTime,
-        endTime: endTime,
-        notes: notes,
-      },
+      data: { startTime, endTime, notes },
       include: { doctor: true },
     });
 

@@ -79,6 +79,28 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Check for overlapping appointments with the same doctor
+    // All slots are 30 minutes, so overlap exists when |existingStart - newStart| < 30 min
+    const newStart = new Date(appointmentDate);
+    const thirtyMin = 30 * 60 * 1000;
+    const overlapping = await db.appointment.findFirst({
+      where: {
+        doctorId,
+        status: { not: "cancelled" },
+        appointmentDate: {
+          gt: new Date(newStart.getTime() - thirtyMin),
+          lt: new Date(newStart.getTime() + thirtyMin),
+        },
+      },
+    });
+
+    if (overlapping) {
+      return NextResponse.json(
+        { error: "This time slot is already booked. Please choose a different time." },
+        { status: 409 }
+      );
+    }
+
     const appointment = await db.appointment.create({
       data: {
         patientId,

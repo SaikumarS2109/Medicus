@@ -53,6 +53,28 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
+    // Check for overlapping shifts on the same day for the same doctor
+    const shiftDate = new Date(date);
+    const dayStart = new Date(shiftDate);
+    dayStart.setUTCHours(0, 0, 0, 0);
+    const dayEnd = new Date(dayStart);
+    dayEnd.setUTCDate(dayEnd.getUTCDate() + 1);
+
+    const existingShifts = await db.staffShift.findMany({
+      where: { doctorId, date: { gte: dayStart, lt: dayEnd } },
+    });
+
+    const overlapping = existingShifts.find(
+      (s) => startTime < s.endTime && endTime > s.startTime
+    );
+
+    if (overlapping) {
+      return NextResponse.json(
+        { error: `Overlaps with an existing shift (${overlapping.startTime}–${overlapping.endTime}). Please choose a different time.` },
+        { status: 409 }
+      );
+    }
+
     const shift = await db.staffShift.create({
       data: {
         doctorId,

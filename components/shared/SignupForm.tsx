@@ -47,43 +47,43 @@ export default function SignupForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 14 }}>
       <div>
-        <label className="block text-sm font-medium">Name</label>
+        <label className="form-label">Name *</label>
         <input
           type="text"
           name="name"
           required
-          className="w-full px-3 py-2 border rounded-lg"
+          className="form-input"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Email</label>
+        <label className="form-label">Email *</label>
         <input
           type="email"
           name="email"
           required
-          className="w-full px-3 py-2 border rounded-lg"
+          className="form-input"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Password</label>
+        <label className="form-label">Password *</label>
         <input
           type="password"
           name="password"
           required
-          className="w-full px-3 py-2 border rounded-lg"
+          className="form-input"
         />
       </div>
 
       <div>
-        <label className="block text-sm font-medium">Role</label>
+        <label className="form-label">Role *</label>
         <select
           value={role}
           onChange={(e) => setRole(e.target.value as any)}
-          className="w-full px-3 py-2 border rounded-lg"
+          className="form-select"
         >
           <option value="PATIENT">Patient</option>
           <option value="DOCTOR">Doctor</option>
@@ -93,22 +93,23 @@ export default function SignupForm() {
 
       {role === "DOCTOR" && (
         <div>
-          <label className="block text-sm font-medium">Specialty</label>
+          <label className="form-label">Specialty</label>
           <input
             type="text"
             name="specialty"
             placeholder="e.g., Cardiology"
-            className="w-full px-3 py-2 border rounded-lg"
+            className="form-input"
           />
         </div>
       )}
 
-      {error && <p className="text-red-600">{error}</p>}
+      {error && <p style={{ fontSize: 12, color: "#DC2626", padding: "8px 10px", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 6 }}>{error}</p>}
 
       <button
         type="submit"
         disabled={loading}
-        className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+        className="btn-primary"
+        style={{ width: "100%" }}
       >
         {loading ? "Signing up..." : "Sign Up"}
       </button>

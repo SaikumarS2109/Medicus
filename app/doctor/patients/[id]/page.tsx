@@ -269,11 +269,11 @@ export default function PatientDetailsPage() {
           )}
         </div>
 
-        {/* Two-column: appointments + prescriptions */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+        {/* Full-width sections: appointments + prescriptions */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
 
           {/* Appointments */}
-          <div className="card" style={{ display: "flex", flexDirection: "column", height: "28rem" }}>
+          <div className="card" style={{ display: "flex", flexDirection: "column" }}>
             <div className="card-header" style={{ flexShrink: 0 }}><span className="card-title">Appointments</span></div>
             <div style={{ flex: 1, overflowY: "auto", padding: "12px 8px", display: "flex", flexDirection: "column", gap: 8 }}>
               {appointments.length > 0 ? appointments.map((apt) => (
@@ -284,8 +284,8 @@ export default function PatientDetailsPage() {
                     editLabel={expandedAptId === apt.id ? "Close" : "Edit"}
                   />
                   {expandedAptId === apt.id && (
-                    <div style={{ marginTop: 4, padding: 14, background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 8, display: "flex", flexDirection: "column", gap: 10 }}>
-                      {aptError && <p style={{ fontSize: 12, color: "#DC2626" }}>{aptError}</p>}
+                    <div style={{ marginTop: 8, padding: 14, background: "#F8FAFC", border: "1px solid #E2E8F0", borderRadius: 8, display: "flex", flexDirection: "column", gap: 10 }}>
+                      {aptError && <p style={{ fontSize: 12, color: "#DC2626", marginBottom: 4 }}>{aptError}</p>}
                       <div>
                         <label className="form-label">Status</label>
                         <select value={aptEdit.status} onChange={(e) => setAptEdit({ ...aptEdit, status: e.target.value })} className="form-select">
@@ -295,7 +295,7 @@ export default function PatientDetailsPage() {
                           <option value="no-show">No-show</option>
                         </select>
                       </div>
-                      <p style={{ fontSize: 11, fontWeight: 600, color: "#1D4ED8", textTransform: "uppercase", letterSpacing: "0.05em" }}>Vitals</p>
+                      <p style={{ fontSize: 11, fontWeight: 600, color: "#2563EB", textTransform: "uppercase", letterSpacing: "0.05em" }}>Vitals</p>
                       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                         {[
                           ["Blood Pressure", "text", "e.g. 120/80", "bloodPressure"],
@@ -330,7 +330,7 @@ export default function PatientDetailsPage() {
           </div>
 
           {/* Prescriptions */}
-          <div className="card" style={{ display: "flex", flexDirection: "column", height: "28rem" }}>
+          <div className="card" style={{ display: "flex", flexDirection: "column" }}>
             <div className="card-header" style={{ flexShrink: 0 }}>
               <span className="card-title">Prescriptions</span>
               {session?.user.role === "doctor" && !addingRx && (
@@ -339,8 +339,8 @@ export default function PatientDetailsPage() {
             </div>
             <div style={{ flex: 1, overflowY: "auto", padding: 12 }}>
               {addingRx && (
-                <form onSubmit={handleCreatePrescription} style={{ marginBottom: 12, padding: 14, background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 8, display: "flex", flexDirection: "column", gap: 10 }}>
-                  <p style={{ fontSize: 13, fontWeight: 500, color: "#1D4ED8" }}>New Prescription</p>
+                <form onSubmit={handleCreatePrescription} style={{ marginBottom: 12, padding: 14, background: "#F8FAFC", border: "1px solid #E2E8F0", borderRadius: 8, display: "flex", flexDirection: "column", gap: 10 }}>
+                  <p style={{ fontSize: 13, fontWeight: 500, color: "#0F172A" }}>New Prescription</p>
                   <div>
                     <label className="form-label">Medication *</label>
                     <input type="text" value={rxData.medication} required onChange={(e) => setRxData({ ...rxData, medication: e.target.value })} className="form-input" />

@@ -25,18 +25,19 @@ export async function POST(req: NextRequest) {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+    const normalizedRole = role.toLowerCase() as "patient" | "doctor" | "admin";
 
     const user = await db.user.create({
       data: {
         email,
         password: hashedPassword,
         name,
-        role,
-        specialty: role === "DOCTOR" ? specialty : null,
+        role: normalizedRole,
+        specialty: normalizedRole === "doctor" ? specialty : null,
       },
     });
 
-    if (role === "PATIENT") {
+    if (normalizedRole === "patient") {
       await db.patient.create({
         data: {
           userId: user.id,

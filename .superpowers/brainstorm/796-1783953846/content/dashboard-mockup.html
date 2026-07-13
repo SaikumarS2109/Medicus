@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Medicus — Design Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #F8FAFC;
+    color: #0F172A;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-weight: 400;
+  }
+
+  .banner {
+    background: #1E293B;
+    color: #94A3B8;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 7px 0;
+    flex-shrink: 0;
+  }
+  .banner strong { color: #F1F5F9; }
+
+  .shell {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 240px;
+    background: #fff;
+    border-right: 1px solid #E2E8F0;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow-y: auto;
+  }
+
+  .sidebar-brand {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid #F1F5F9;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-icon {
+    width: 30px; height: 30px;
+    background: #2563EB;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .brand-icon svg { color: #fff; }
+  .brand-name { font-size: 15px; font-weight: 600; color: #0F172A; letter-spacing: -0.02em; }
+  .brand-tag { font-size: 10px; color: #94A3B8; letter-spacing: 0.05em; text-transform: uppercase; font-weight: 400; }
+
+  .sidebar-section {
+    padding: 16px 12px 4px;
+  }
+  .sidebar-section-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #94A3B8;
+    padding: 0 8px;
+    margin-bottom: 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    font-weight: 400;
+    color: #475569;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    margin-bottom: 1px;
+    text-decoration: none;
+  }
+  .nav-item:hover { background: #F8FAFC; color: #0F172A; }
+  .nav-item.active {
+    background: #EFF6FF;
+    color: #2563EB;
+    font-weight: 500;
+  }
+  .nav-item.active svg { color: #2563EB; }
+  .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; color: #94A3B8; }
+  .nav-item.active svg { color: #2563EB; }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 12px;
+    border-top: 1px solid #F1F5F9;
+  }
+  .user-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+  }
+  .avatar {
+    width: 28px; height: 28px;
+    background: #EFF6FF;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: #2563EB;
+    flex-shrink: 0;
+  }
+  .user-info { flex: 1; min-width: 0; }
+  .user-name { font-size: 12.5px; font-weight: 500; color: #0F172A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .user-role { font-size: 10.5px; color: #94A3B8; text-transform: capitalize; font-weight: 400; }
+  .signout-btn {
+    padding: 6px 8px;
+    border-radius: 6px;
+    background: none;
+    border: none;
+    color: #94A3B8;
+    cursor: pointer;
+    display: flex; align-items: center;
+  }
+  .signout-btn:hover { color: #EF4444; background: #FEF2F2; }
+
+  /* ── Main ── */
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    background: #fff;
+  }
+
+  .topbar {
+    background: #fff;
+    border-bottom: 1px solid #E2E8F0;
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .page-title { font-size: 18px; font-weight: 600; color: #0F172A; letter-spacing: -0.02em; }
+  .page-subtitle { font-size: 13px; color: #94A3B8; margin-top: 1px; font-weight: 400; }
+  .topbar-actions { display: flex; gap: 8px; align-items: center; }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px;
+    background: #2563EB;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: -0.01em;
+  }
+  .btn-primary:hover { background: #1D4ED8; }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px;
+    background: #fff;
+    color: #475569;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 400;
+    cursor: pointer;
+  }
+  .btn-secondary:hover { background: #F8FAFC; }
+
+  .content { padding: 28px 32px; }
+
+  /* ── Stat tiles ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .stat-tile {
+    background: #fff;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    padding: 20px 22px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .stat-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .stat-icon.blue  { background: #EFF6FF; }
+  .stat-icon.green { background: #F0FDF4; }
+  .stat-icon.amber { background: #FFFBEB; }
+  .stat-icon.blue svg  { color: #2563EB; }
+  .stat-icon.green svg { color: #16A34A; }
+  .stat-icon.amber svg { color: #D97706; }
+  .stat-body { flex: 1; }
+  .stat-value { font-size: 26px; font-weight: 600; color: #0F172A; letter-spacing: -0.03em; line-height: 1.1; }
+  .stat-label { font-size: 12px; color: #94A3B8; font-weight: 400; margin-top: 3px; }
+
+  /* ── Section ── */
+  .section-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid #E2E8F0;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid #F1F5F9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .card-title { font-size: 13.5px; font-weight: 600; color: #0F172A; }
+  .card-count { font-size: 11px; color: #94A3B8; font-weight: 400; background: #F8FAFC; padding: 2px 7px; border-radius: 99px; border: 1px solid #E2E8F0; }
+  .card-body { padding: 4px 0; }
+
+  .apt-row {
+    display: flex;
+    align-items: center;
+    padding: 11px 20px;
+    border-bottom: 1px solid #F8FAFC;
+    gap: 12px;
+  }
+  .apt-row:last-child { border-bottom: none; }
+  .apt-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: #EFF6FF;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: #2563EB;
+    flex-shrink: 0;
+  }
+  .apt-info { flex: 1; min-width: 0; }
+  .apt-name { font-size: 13px; font-weight: 500; color: #0F172A; }
+  .apt-time { font-size: 11.5px; color: #94A3B8; margin-top: 1px; font-weight: 400; }
+  .badge {
+    font-size: 10.5px; font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 99px;
+  }
+  .badge-blue   { background: #EFF6FF; color: #2563EB; }
+  .badge-green  { background: #F0FDF4; color: #16A34A; }
+  .badge-red    { background: #FEF2F2; color: #DC2626; }
+  .badge-orange { background: #FFF7ED; color: #EA580C; }
+
+  .quick-actions { display: flex; flex-direction: column; gap: 0; }
+  .qa-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 13px 20px;
+    border-bottom: 1px solid #F8FAFC;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+  }
+  .qa-item:last-child { border-bottom: none; }
+  .qa-item:hover { background: #F8FAFC; }
+  .qa-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .qa-icon.blue  { background: #EFF6FF; }
+  .qa-icon.green { background: #F0FDF4; }
+  .qa-icon.purple { background: #F5F3FF; }
+  .qa-icon.blue svg  { color: #2563EB; width:15px;height:15px; }
+  .qa-icon.green svg { color: #16A34A; width:15px;height:15px; }
+  .qa-icon.purple svg { color: #7C3AED; width:15px;height:15px; }
+  .qa-label { font-size: 13px; font-weight: 500; color: #0F172A; }
+  .qa-sub { font-size: 11.5px; color: #94A3B8; font-weight: 400; }
+  .qa-arrow { margin-left: auto; color: #CBD5E1; }
+  .qa-arrow svg { width: 14px; height: 14px; }
+
+  /* SVG icons inline */
+  svg { display: inline-block; }
+</style>
+</head>
+<body>
+
+<div class="banner">
+  Design mockup — <strong>Medicus UX Overhaul</strong> — Sidebar + Clean &amp; Clinical + Refined Blue
+</div>
+
+<div class="shell">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">Medicus</div>
+        <div class="brand-tag">Admin Portal</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Main</div>
+
+      <a class="nav-item active">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+        Dashboard
+      </a>
+
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Appointments
+      </a>
+
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        Users
+      </a>
+
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+        </svg>
+        Schedule
+      </a>
+
+      <a class="nav-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/>
+        </svg>
+        Settings
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="avatar">A</div>
+        <div class="user-info">
+          <div class="user-name">Admin User</div>
+          <div class="user-role">Administrator</div>
+        </div>
+        <button class="signout-btn" title="Sign out">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Main content ── -->
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="page-title">Dashboard</div>
+        <div class="page-subtitle">Sunday, 13 July 2026</div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn-secondary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/>
+          </svg>
+          Filter
+        </button>
+        <button class="btn-primary">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          New Appointment
+        </button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- Stats row -->
+      <div class="stats-row">
+        <div class="stat-tile">
+          <div class="stat-icon blue">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+              <polyline points="9 16 11 18 15 14"/>
+            </svg>
+          </div>
+          <div class="stat-body">
+            <div class="stat-value">12</div>
+            <div class="stat-label">Today's Appointments</div>
+          </div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-icon green">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+              <polyline points="16 11 18 13 22 9"/>
+            </svg>
+          </div>
+          <div class="stat-body">
+            <div class="stat-value">4</div>
+            <div class="stat-label">Staff on Duty</div>
+          </div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-icon amber">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+          </div>
+          <div class="stat-body">
+            <div class="stat-value">238</div>
+            <div class="stat-label">Total Appointments</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section grid -->
+      <div class="section-grid">
+
+        <!-- Today's appointments -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Today's Appointments</span>
+            <span class="card-count">12 total</span>
+          </div>
+          <div class="card-body">
+            <div class="apt-row">
+              <div class="apt-avatar">SR</div>
+              <div class="apt-info">
+                <div class="apt-name">Sarah Reynolds → Dr. Chen</div>
+                <div class="apt-time">09:00 – 09:30</div>
+              </div>
+              <span class="badge badge-blue">Scheduled</span>
+            </div>
+            <div class="apt-row">
+              <div class="apt-avatar">MK</div>
+              <div class="apt-info">
+                <div class="apt-name">Marcus Kim → Dr. Patel</div>
+                <div class="apt-time">10:00 – 10:30</div>
+              </div>
+              <span class="badge badge-green">Completed</span>
+            </div>
+            <div class="apt-row">
+              <div class="apt-avatar">JP</div>
+              <div class="apt-info">
+                <div class="apt-name">Julia Park → Dr. Chen</div>
+                <div class="apt-time">11:30 – 12:00</div>
+              </div>
+              <span class="badge badge-blue">Scheduled</span>
+            </div>
+            <div class="apt-row">
+              <div class="apt-avatar">DT</div>
+              <div class="apt-info">
+                <div class="apt-name">David Torres → Dr. Nguyen</div>
+                <div class="apt-time">14:00 – 14:30</div>
+              </div>
+              <span class="badge badge-red">Cancelled</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick actions -->
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Quick Actions</span>
+          </div>
+          <div class="card-body">
+            <div class="quick-actions">
+              <a class="qa-item">
+                <div class="qa-icon blue">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="qa-label">Manage Schedule</div>
+                  <div class="qa-sub">View and edit staff shifts</div>
+                </div>
+                <span class="qa-arrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </span>
+              </a>
+              <a class="qa-item">
+                <div class="qa-icon green">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="qa-label">Manage Users</div>
+                  <div class="qa-sub">Patients and doctors</div>
+                </div>
+                <span class="qa-arrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </span>
+              </a>
+              <a class="qa-item">
+                <div class="qa-icon purple">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="qa-label">All Appointments</div>
+                  <div class="qa-sub">View, cancel, or reassign</div>
+                </div>
+                <span class="qa-arrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+</body>
+</html>

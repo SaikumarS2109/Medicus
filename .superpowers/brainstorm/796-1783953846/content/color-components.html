@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Colors & Components</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #F8FAFC;
+    color: #0F172A;
+    font-weight: 400;
+    padding: 40px 20px;
+  }
+
+  .container { max-width: 1200px; margin: 0 auto; }
+  .banner {
+    background: #1E293B;
+    color: #94A3B8;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 40px;
+  }
+
+  h1 { font-size: 24px; font-weight: 600; margin-bottom: 32px; }
+  h2 { font-size: 16px; font-weight: 600; margin-top: 40px; margin-bottom: 16px; color: #0F172A; }
+  .section { margin-bottom: 40px; }
+
+  /* ── Colors ── */
+  .color-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .color-swatch {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #E2E8F0;
+  }
+  .color-box {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 8px;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 500;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  }
+  .color-label {
+    padding: 8px 12px;
+    background: #fff;
+    font-size: 11px;
+    color: #475569;
+    font-weight: 500;
+  }
+  .color-hex {
+    font-size: 9px;
+    color: #94A3B8;
+    font-family: monospace;
+  }
+
+  /* ── Buttons ── */
+  .button-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+    margin-bottom: 20px;
+  }
+  .button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .button-group-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #94A3B8;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  button, .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    padding: 8px 16px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .btn-primary {
+    background: #2563EB;
+    color: #fff;
+    font-weight: 500;
+  }
+  .btn-primary:hover {
+    background: #1D4ED8;
+  }
+  .btn-primary:active {
+    background: #1E40AF;
+  }
+
+  .btn-secondary {
+    background: #fff;
+    color: #475569;
+    border: 1px solid #E2E8F0;
+    font-weight: 400;
+  }
+  .btn-secondary:hover {
+    background: #F8FAFC;
+  }
+  .btn-secondary:active {
+    background: #F1F5F9;
+  }
+
+  .btn-icon { width: 16px; height: 16px; }
+
+  .button-states {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .button-state-label {
+    font-size: 10px;
+    color: #94A3B8;
+    margin-top: 6px;
+  }
+
+  /* ── Badges ── */
+  .badge-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+  }
+  .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    font-size: 10.5px;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 99px;
+  }
+
+  .badge-blue { background: #EFF6FF; color: #2563EB; }
+  .badge-green { background: #F0FDF4; color: #16A34A; }
+  .badge-red { background: #FEF2F2; color: #DC2626; }
+  .badge-orange { background: #FFF7ED; color: #EA580C; }
+  .badge-gray { background: #F1F5F9; color: #64748B; }
+
+  /* ── Text colors ── */
+  .text-demo {
+    padding: 12px;
+    background: #fff;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
+  .text-slate { color: #0F172A; font-weight: 600; font-size: 14px; }
+  .text-gray-600 { color: #475569; font-size: 13px; }
+  .text-gray-400 { color: #94A3B8; font-size: 12px; }
+  .text-blue { color: #2563EB; font-weight: 500; font-size: 13px; }
+
+  .text-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+  }
+
+  /* ── Icon placeholders ── */
+  .icon-demo {
+    width: 16px;
+    height: 16px;
+    background: currentColor;
+    border-radius: 3px;
+  }
+
+  .variant-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid #F1F5F9;
+  }
+  .variant-row:last-child { border-bottom: none; }
+  .variant-label { font-size: 11px; color: #94A3B8; min-width: 80px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="banner">Component Preview — Colors, Buttons, Badges, Text Hierarchy</div>
+
+  <h1>Medicus — Colors & Components</h1>
+
+  <!-- COLOR PALETTE -->
+  <div class="section">
+    <h2>Color Palette</h2>
+
+    <h3 style="font-size: 13px; color: #475569; font-weight: 500; margin-top: 20px; margin-bottom: 12px;">Primary Brand</h3>
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="color-box" style="background: #2563EB;">Blue-700</div>
+        <div class="color-label">
+          <div>Action</div>
+          <div class="color-hex">#2563EB</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-box" style="background: #1D4ED8;">Blue-800</div>
+        <div class="color-label">
+          <div>Hover</div>
+          <div class="color-hex">#1D4ED8</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-box" style="background: #EFF6FF;">Blue-50</div>
+        <div class="color-label">
+          <div>Background</div>
+          <div class="color-hex">#EFF6FF</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-size: 13px; color: #475569; font-weight: 500; margin-top: 20px; margin-bottom: 12px;">Neutral Scale</h3>
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="color-box" style="background: #0F172A; color: #fff;">Slate-950</div>
+        <div class="color-label">
+          <div>Text/Headings</div>
+          <div class="color-hex">#0F172A</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-box" style="background: #475569;">Gray-600</div>
+        <div class="color-label">
+          <div>Secondary</div>
+          <div class="color-hex">#475569</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-box" style="background: #94A3B8;">Gray-400</div>
+        <div class="color-label">
+          <div>Tertiary</div>
+          <div class="color-hex">#94A3B8</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-box" style="background: #E2E8F0; color: #94A3B8;">Gray-200</div>
+        <div class="color-label">
+          <div>Borders</div>
+          <div class="color-hex">#E2E8F0</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-box" style="background: #F8FAFC; color: #94A3B8;">Gray-50</div>
+        <div class="color-label">
+          <div>Hover/BG</div>
+          <div class="color-hex">#F8FAFC</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-box" style="background: #fff; color: #94A3B8; border: 2px solid #E2E8F0;">White</div>
+        <div class="color-label">
+          <div>Cards</div>
+          <div class="color-hex">#fff</div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-size: 13px; color: #475569; font-weight: 500; margin-top: 20px; margin-bottom: 12px;">Semantic Status Colors</h3>
+    <div class="color-grid">
+      <div class="color-swatch">
+        <div class="color-box" style="background: #16A34A;">Green-600</div>
+        <div class="color-label">
+          <div>Completed</div>
+          <div class="color-hex">#16A34A</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-box" style="background: #DC2626;">Red-600</div>
+        <div class="color-label">
+          <div>Cancelled</div>
+          <div class="color-hex">#DC2626</div>
+        </div>
+      </div>
+      <div class="color-swatch">
+        <div class="color-box" style="background: #EA580C;">Orange-600</div>
+        <div class="color-label">
+          <div>No-show</div>
+          <div class="color-hex">#EA580C</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="section">
+    <h2>Buttons</h2>
+    <div class="button-grid">
+      <div class="button-group">
+        <div class="button-group-label">Primary Button</div>
+        <div class="button-states">
+          <button class="btn-primary">
+            <span class="icon-demo"></span> Add Appointment
+          </button>
+          <span class="button-state-label">Default</span>
+          <button class="btn-primary" style="background: #1D4ED8;">
+            <span class="icon-demo"></span> Add Appointment
+          </button>
+          <span class="button-state-label">Hover</span>
+        </div>
+      </div>
+      <div class="button-group">
+        <div class="button-group-label">Secondary Button</div>
+        <div class="button-states">
+          <button class="btn-secondary">
+            <span class="icon-demo"></span> Filter
+          </button>
+          <span class="button-state-label">Default</span>
+          <button class="btn-secondary" style="background: #F8FAFC;">
+            <span class="icon-demo"></span> Filter
+          </button>
+          <span class="button-state-label">Hover</span>
+        </div>
+      </div>
+      <div class="button-group">
+        <div class="button-group-label">Text Button</div>
+        <div class="button-states">
+          <button style="background: none; border: none; color: #2563EB; padding: 0; font-size: 13px; font-weight: 400; cursor: pointer;">
+            View Details
+          </button>
+          <span class="button-state-label">Default</span>
+          <button style="background: none; border: none; color: #1D4ED8; padding: 0; font-size: 13px; font-weight: 400; cursor: pointer; text-decoration: underline;">
+            View Details
+          </button>
+          <span class="button-state-label">Hover</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BADGES / STATUS PILLS -->
+  <div class="section">
+    <h2>Badges & Status Pills</h2>
+    <div style="background: #fff; border: 1px solid #E2E8F0; border-radius: 8px; padding: 20px;">
+      <h3 style="font-size: 12px; color: #94A3B8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 12px;">Appointment Status</h3>
+      <div class="badge-row">
+        <span class="badge badge-blue">Scheduled</span>
+        <span class="badge badge-green">Completed</span>
+        <span class="badge badge-red">Cancelled</span>
+        <span class="badge badge-orange">No-show</span>
+      </div>
+
+      <h3 style="font-size: 12px; color: #94A3B8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 20px; margin-bottom: 12px;">Other</h3>
+      <div class="badge-row">
+        <span class="badge badge-gray">3 items</span>
+        <span class="badge badge-blue">Active</span>
+        <span class="badge badge-gray">Pending</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TEXT COLORS & HIERARCHY -->
+  <div class="section">
+    <h2>Text Colors & Hierarchy</h2>
+    <div class="text-grid">
+      <div>
+        <div class="text-demo">
+          <div class="text-slate">Heading Level 1</div>
+          <div style="font-size: 12px; color: #94A3B8; margin-top: 2px;">18px • 600 weight</div>
+        </div>
+        <div class="text-demo">
+          <div style="font-size: 15px; font-weight: 600; color: #0F172A;">Heading Level 2</div>
+          <div style="font-size: 12px; color: #94A3B8; margin-top: 2px;">15px • 600 weight</div>
+        </div>
+      </div>
+      <div>
+        <div class="text-demo">
+          <div style="font-size: 13.5px; font-weight: 600; color: #0F172A;">Card Title</div>
+          <div style="font-size: 12px; color: #94A3B8; margin-top: 2px;">13.5px • 600 weight</div>
+        </div>
+        <div class="text-demo">
+          <div class="text-gray-600">Body Text</div>
+          <div style="font-size: 12px; color: #94A3B8; margin-top: 2px;">13px • 400 weight</div>
+        </div>
+      </div>
+      <div>
+        <div class="text-demo">
+          <div class="text-gray-400">Secondary Text</div>
+          <div style="font-size: 12px; color: #94A3B8; margin-top: 2px;">12px • 400 weight</div>
+        </div>
+        <div class="text-demo">
+          <div class="text-blue">Link / Action Text</div>
+          <div style="font-size: 12px; color: #94A3B8; margin-top: 2px;">13px • 500 weight • Blue-700</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ICON CONTEXT -->
+  <div class="section">
+    <h2>Icon Usage</h2>
+    <div style="background: #fff; border: 1px solid #E2E8F0; border-radius: 8px; padding: 20px;">
+      <div style="font-size: 12px; color: #94A3B8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px;">With Buttons</div>
+      <div class="variant-row">
+        <div class="icon-demo" style="background: #2563EB;"></div>
+        <span style="font-size: 13px; color: #0F172A;">16x16px, solid fill</span>
+      </div>
+      <div style="font-size: 12px; color: #94A3B8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 16px; margin-bottom: 16px;">Sidebar Nav</div>
+      <div class="variant-row">
+        <div style="width: 16px; height: 16px; border: 2px solid #94A3B8; border-radius: 2px;"></div>
+        <span style="font-size: 13px; color: #0F172A;">16x16px, 2px stroke</span>
+      </div>
+      <div class="variant-row">
+        <div style="width: 16px; height: 16px; border: 2px solid #2563EB; border-radius: 2px;"></div>
+        <span style="font-size: 13px; color: #0F172A;">Active state</span>
+      </div>
+      <div style="font-size: 12px; color: #94A3B8; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 16px; margin-bottom: 16px;">Stat Tile Icons</div>
+      <div class="variant-row">
+        <div style="width: 18px; height: 18px; border: 2px solid #2563EB; border-radius: 3px;"></div>
+        <span style="font-size: 13px; color: #0F172A;">18x18px, 2px stroke, role-colored</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

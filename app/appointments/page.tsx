@@ -186,19 +186,20 @@ export default function PatientAppointmentsPage() {
                     )}
 
                     {reschedulingId === apt.id && (
-                      <div className="mt-1 p-4 bg-blue-50 border border-blue-200 rounded-lg space-y-3">
-                        <p className="text-sm font-semibold text-blue-800">Reschedule Appointment</p>
-                        {rescheduleError && <p className="text-xs text-red-600">{rescheduleError}</p>}
+                      <div className="mt-3 p-4 border border-slate-200 rounded-lg" style={{ background: "#F8FAFC" }}>
+                        <p style={{ fontSize: 13, fontWeight: 600, color: "#0F172A", marginBottom: 12 }}>Reschedule Appointment</p>
+                        {rescheduleError && <p style={{ fontSize: 12, color: "#DC2626", marginBottom: 10 }}>{rescheduleError}</p>}
                         {loadingAvailability ? (
-                          <p className="text-xs text-gray-500">Loading availability...</p>
+                          <p style={{ fontSize: 12, color: "#94A3B8", marginBottom: 12 }}>Loading availability...</p>
                         ) : (
-                          <div className="grid grid-cols-2 gap-3">
+                          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 12 }}>
                             <div>
-                              <label className="block text-xs font-medium mb-1">Available Date</label>
+                              <label className="form-label">Available Date</label>
                               <select value={rescheduleDate}
                                 onChange={(e) => { setRescheduleDate(e.target.value); setRescheduleTime(""); }}
                                 disabled={availableDates.length === 0}
-                                className="w-full px-3 py-1.5 border rounded-lg text-sm disabled:opacity-50">
+                                className="form-select"
+                                style={availableDates.length === 0 ? { opacity: 0.5 } : {}}>
                                 <option value="">{availableDates.length === 0 ? "No availability" : "Choose date..."}</option>
                                 {availableDates.map(({ date, startTime, endTime }) => (
                                   <option key={date} value={date}>
@@ -209,11 +210,12 @@ export default function PatientAppointmentsPage() {
                               </select>
                             </div>
                             <div>
-                              <label className="block text-xs font-medium mb-1">Time Slot</label>
+                              <label className="form-label">Time Slot</label>
                               <select value={rescheduleTime}
                                 onChange={(e) => setRescheduleTime(e.target.value)}
                                 disabled={!rescheduleDate || availableSlots.length === 0}
-                                className="w-full px-3 py-1.5 border rounded-lg text-sm disabled:opacity-50">
+                                className="form-select"
+                                style={(!rescheduleDate || availableSlots.length === 0) ? { opacity: 0.5 } : {}}>
                                 <option value="">
                                   {!rescheduleDate ? "Select date first" : availableSlots.length === 0 ? "No slots" : "Choose slot..."}
                                 </option>
@@ -227,13 +229,13 @@ export default function PatientAppointmentsPage() {
                             </div>
                           </div>
                         )}
-                        <div className="flex gap-2">
+                        <div style={{ display: "flex", gap: 8 }}>
                           <button onClick={() => handleReschedule(apt.id)} disabled={rescheduling || loadingAvailability}
-                            className="btn-primary" style={{ fontSize: 12 }}>
+                            className="btn-primary" style={{ fontSize: 12, flex: 1 }}>
                             {rescheduling ? "Saving..." : "Confirm"}
                           </button>
                           <button onClick={() => setReschedulingId(null)}
-                            className="btn-secondary" style={{ fontSize: 12 }}>
+                            className="btn-secondary" style={{ fontSize: 12, flex: 1 }}>
                             Cancel
                           </button>
                         </div>

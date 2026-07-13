@@ -3,13 +3,13 @@ import Link from "next/link";
 
 export default function LoginPage() {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
-        <h1 className="text-2xl font-bold mb-6">Log In</h1>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100vh", background: "#fff" }}>
+      <div className="card" style={{ width: 384, padding: 32 }}>
+        <h1 style={{ fontSize: "20px", fontWeight: 600, color: "#0F172A", marginBottom: 20 }}>Log In</h1>
         <LoginForm />
-        <p className="text-center mt-4 text-sm">
+        <p style={{ textAlign: "center", marginTop: 16, fontSize: 13, color: "#475569" }}>
           Don't have an account?{" "}
-          <Link href="/signup" className="text-blue-600 hover:underline">
+          <Link href="/signup" style={{ color: "#2563EB", textDecoration: "none" }}>
             Sign up
           </Link>
         </p>

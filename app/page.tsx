@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import PageLoader from "@/components/shared/PageLoader";
 
 export default function Home() {
   const { data: session, status } = useSession();
@@ -15,95 +16,82 @@ export default function Home() {
     }
   }, [status, session, router]);
 
-  if (status === "loading") {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
-  }
+  if (status === "loading") return <PageLoader />;
 
-  if (status === "authenticated") {
-    return <div className="flex items-center justify-center min-h-screen">Redirecting to dashboard...</div>;
-  }
+  if (status === "authenticated") return <PageLoader />;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
-      <nav className="bg-gray-900 text-white p-4 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <h1 className="text-xl font-bold">Healthcare Portal</h1>
-          <div className="space-x-4">
-            <Link href="/login" className="hover:text-gray-300">
+    <div style={{ background: "#fff", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <nav style={{ background: "#fff", borderBottom: "1px solid #E2E8F0", padding: "16px 32px", position: "sticky", top: 0, zIndex: 50 }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <h1 style={{ fontSize: "18px", fontWeight: 600, color: "#0F172A" }}>Medicus</h1>
+          <div style={{ display: "flex", gap: 12 }}>
+            <Link href="/login" style={{ fontSize: "13px", color: "#475569", textDecoration: "none" }}>
               Log In
             </Link>
-            <Link href="/signup" className="bg-blue-600 px-4 py-2 rounded hover:bg-blue-700">
+            <Link href="/signup" className="btn-primary" style={{ fontSize: "13px" }}>
               Sign Up
             </Link>
           </div>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-4 py-16">
-        <section className="text-center mb-16">
-          <h2 className="text-5xl font-bold mb-4">Welcome to Healthcare Portal</h2>
-          <p className="text-xl text-gray-600 mb-8">
-            Manage appointments, prescriptions, and patient records in one place
+      <main style={{ flex: 1, maxWidth: "1280px", margin: "0 auto", width: "100%", padding: "48px 32px" }}>
+        <section style={{ textAlign: "center", marginBottom: 48 }}>
+          <h2 style={{ fontSize: "42px", fontWeight: 600, color: "#0F172A", marginBottom: 16 }}>Welcome to Medicus</h2>
+          <p style={{ fontSize: "16px", color: "#475569", marginBottom: 24, lineHeight: 1.6 }}>
+            Manage appointments, prescriptions, and medical records in one secure place
           </p>
-          <div className="flex gap-4 justify-center">
-            <Link
-              href="/login"
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold"
-            >
+          <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
+            <Link href="/login" className="btn-primary" style={{ fontSize: "14px", padding: "10px 24px" }}>
               Log In
             </Link>
-            <Link
-              href="/signup"
-              className="px-6 py-3 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 font-semibold"
-            >
+            <Link href="/signup" className="btn-secondary" style={{ fontSize: "14px", padding: "10px 24px" }}>
               Create Account
             </Link>
           </div>
         </section>
 
-        <section className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          <div className="bg-white p-8 rounded-lg shadow-md">
-            <div className="text-4xl mb-4">👤</div>
-            <h3 className="text-2xl font-bold mb-2">For Patients</h3>
-            <p className="text-gray-600">
+        <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, marginBottom: 48 }}>
+          <div className="card" style={{ padding: 24 }}>
+            <div style={{ fontSize: "32px", marginBottom: 12 }}>👤</div>
+            <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#0F172A", marginBottom: 8 }}>For Patients</h3>
+            <p style={{ fontSize: "13px", color: "#475569", lineHeight: 1.6 }}>
               Book appointments, view prescriptions, and manage your medical records securely.
             </p>
           </div>
 
-          <div className="bg-white p-8 rounded-lg shadow-md">
-            <div className="text-4xl mb-4">👨‍⚕️</div>
-            <h3 className="text-2xl font-bold mb-2">For Doctors</h3>
-            <p className="text-gray-600">
+          <div className="card" style={{ padding: 24 }}>
+            <div style={{ fontSize: "32px", marginBottom: 12 }}>👨‍⚕️</div>
+            <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#0F172A", marginBottom: 8 }}>For Doctors</h3>
+            <p style={{ fontSize: "13px", color: "#475569", lineHeight: 1.6 }}>
               View patient records, create prescriptions, and manage your schedule efficiently.
             </p>
           </div>
 
-          <div className="bg-white p-8 rounded-lg shadow-md">
-            <div className="text-4xl mb-4">⚙️</div>
-            <h3 className="text-2xl font-bold mb-2">For Admins</h3>
-            <p className="text-gray-600">
+          <div className="card" style={{ padding: 24 }}>
+            <div style={{ fontSize: "32px", marginBottom: 12 }}>⚙️</div>
+            <h3 style={{ fontSize: "16px", fontWeight: 600, color: "#0F172A", marginBottom: 8 }}>For Admins</h3>
+            <p style={{ fontSize: "13px", color: "#475569", lineHeight: 1.6 }}>
               Manage staff schedules, users, and oversee all appointments and operations.
             </p>
           </div>
         </section>
 
-        <section className="bg-blue-50 p-12 rounded-lg text-center">
-          <h3 className="text-3xl font-bold mb-4">Ready to get started?</h3>
-          <p className="text-lg text-gray-600 mb-6">
-            Join thousands of healthcare providers and patients using our platform.
+        <section className="card" style={{ padding: 40, textAlign: "center" }}>
+          <h3 style={{ fontSize: "28px", fontWeight: 600, color: "#0F172A", marginBottom: 12 }}>Ready to get started?</h3>
+          <p style={{ fontSize: "14px", color: "#475569", marginBottom: 20, lineHeight: 1.6 }}>
+            Join healthcare providers and patients using Medicus to streamline care coordination.
           </p>
-          <Link
-            href="/signup"
-            className="inline-block px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold text-lg"
-          >
+          <Link href="/signup" className="btn-primary" style={{ fontSize: "14px", padding: "10px 24px", display: "inline-block" }}>
             Sign Up Now
           </Link>
         </section>
       </main>
 
-      <footer className="bg-gray-900 text-white p-6 mt-16">
-        <div className="max-w-7xl mx-auto text-center">
-          <p>&copy; 2026 Healthcare Portal. All rights reserved.</p>
+      <footer style={{ background: "#F8FAFC", borderTop: "1px solid #E2E8F0", padding: "24px 32px", marginTop: 48, textAlign: "center" }}>
+        <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+          <p style={{ fontSize: "12px", color: "#94A3B8" }}>&copy; 2026 Medicus. All rights reserved.</p>
         </div>
       </footer>
     </div>

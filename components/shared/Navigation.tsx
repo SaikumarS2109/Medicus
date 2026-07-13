@@ -2,17 +2,14 @@
 
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function Navigation() {
   const { data: session } = useSession();
-  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleSignOut = async () => {
-    await signOut({ redirect: false });
-    router.push("/login");
+  const handleSignOut = () => {
+    signOut({ callbackUrl: "/login" });
   };
 
   if (!session) {
@@ -32,6 +29,7 @@ export default function Navigation() {
     { href: "/doctor/patients", label: "Patients" },
     { href: "/doctor/my-prescriptions", label: "Prescriptions" },
     { href: "/doctor/schedule", label: "Schedule" },
+    { href: "/settings", label: "Settings" },
   ];
 
   const adminLinks = [
@@ -39,6 +37,7 @@ export default function Navigation() {
     { href: "/admin/users", label: "Users" },
     { href: "/admin/appointments", label: "Appointments" },
     { href: "/admin/schedule", label: "Schedule" },
+    { href: "/settings", label: "Settings" },
   ];
 
   let navLinks: { href: string; label: string }[] = [];
