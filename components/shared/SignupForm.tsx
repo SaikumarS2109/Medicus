@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 
 export default function SignupForm() {
   const router = useRouter();
-  const [role, setRole] = useState<"PATIENT" | "DOCTOR" | "ADMIN">("PATIENT");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -18,7 +17,6 @@ export default function SignupForm() {
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
     const name = formData.get("name") as string;
-    const specialty = formData.get("specialty") as string;
 
     try {
       const res = await fetch("/api/auth/signup", {
@@ -28,8 +26,7 @@ export default function SignupForm() {
           email,
           password,
           name,
-          role,
-          specialty: role === "DOCTOR" ? specialty : null,
+          role: "PATIENT",
         }),
       });
 
@@ -77,31 +74,6 @@ export default function SignupForm() {
           className="form-input"
         />
       </div>
-
-      <div>
-        <label className="form-label">Role *</label>
-        <select
-          value={role}
-          onChange={(e) => setRole(e.target.value as any)}
-          className="form-select"
-        >
-          <option value="PATIENT">Patient</option>
-          <option value="DOCTOR">Doctor</option>
-          <option value="ADMIN">Admin</option>
-        </select>
-      </div>
-
-      {role === "DOCTOR" && (
-        <div>
-          <label className="form-label">Specialty</label>
-          <input
-            type="text"
-            name="specialty"
-            placeholder="e.g., Cardiology"
-            className="form-input"
-          />
-        </div>
-      )}
 
       {error && <p style={{ fontSize: 12, color: "#DC2626", padding: "8px 10px", background: "#FEF2F2", border: "1px solid #FECACA", borderRadius: 6 }}>{error}</p>}
 
