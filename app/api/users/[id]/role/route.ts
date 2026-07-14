@@ -1,13 +1,14 @@
 import { db } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/app/api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth();
+    const session = await getServerSession(authOptions);
 
     if (!session || session.user.role !== "admin") {
       return NextResponse.json(
@@ -16,6 +17,7 @@ export async function PATCH(
       );
     }
 
+    const { id } = await params;
     const { role, specialty } = await req.json();
 
     if (!role || !["patient", "doctor", "admin"].includes(role)) {
@@ -26,7 +28,7 @@ export async function PATCH(
     }
 
     const user = await db.user.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         role: role as "patient" | "doctor" | "admin",
         specialty: role === "doctor" ? specialty || null : null,
