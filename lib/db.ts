@@ -4,10 +4,13 @@ declare global {
   var prisma: PrismaClient | undefined;
 }
 
-export const db =
-  globalThis.prisma ||
-  new PrismaClient({
-    log: ["error"],
-  });
+const prismaClientSingletonSymbol = Symbol.for("prisma.client");
+const globalForPrisma = globalThis as unknown as {
+  [prismaClientSingletonSymbol]: PrismaClient;
+};
 
-if (process.env.NODE_ENV !== "production") globalThis.prisma = db;
+export const db = globalForPrisma[prismaClientSingletonSymbol] || new PrismaClient();
+
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma[prismaClientSingletonSymbol] = db;
+}
